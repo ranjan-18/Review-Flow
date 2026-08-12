@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "node server/index.js",
     "dev:server": "nodemon server/index.js",
     "dev:funnel": "npm run dev --prefix client-funnel",
     "dev:admin": "npm run dev --prefix client-admin",
