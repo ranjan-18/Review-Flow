@@ -83,10 +83,14 @@ app.get(/.*/, (req, res) => {
 });
 
 // Start listening
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(`  ReviewFlow AI Fullstack Server listening on Port ${PORT}`);
-  console.log(`  Environment: ${NODE_ENV}`);
-  console.log(`  Database Status: MongoDB Atlas Active`);
-  console.log(`====================================================`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`====================================================`);
+    console.log(`  ReviewFlow AI Fullstack Server listening on Port ${PORT}`);
+    console.log(`  Environment: ${NODE_ENV}`);
+    console.log(`  Database Status: MongoDB Atlas Active`);
+    console.log(`====================================================`);
+  });
+}
+
+export default app;
