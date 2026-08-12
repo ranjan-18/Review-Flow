@@ -2,21 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "client-funnel/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
       "src": "client-admin/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "client-owner/package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist"
@@ -30,43 +16,15 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/admin/assets/(.*)",
-      "dest": "/client-admin/dist/assets/$1"
-    },
-    {
-      "src": "/admin/(.*)",
-      "dest": "/client-admin/dist/index.html"
-    },
-    {
-      "src": "/admin",
-      "dest": "/client-admin/dist/index.html"
-    },
-    {
-      "src": "/owner/assets/(.*)",
-      "dest": "/client-owner/dist/assets/$1"
-    },
-    {
-      "src": "/owner/(.*)",
-      "dest": "/client-owner/dist/index.html"
-    },
-    {
-      "src": "/owner",
-      "dest": "/client-owner/dist/index.html"
+      "dest": "https://review-flow-sovb.onrender.com/api/$1"
     },
     {
       "src": "/assets/(.*)",
-      "dest": "/client-funnel/dist/assets/$1"
-    },
-    {
-      "src": "/favicon.svg",
-      "dest": "/client-funnel/dist/favicon.svg"
+      "dest": "/client-admin/dist/assets/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/client-funnel/dist/index.html"
+      "dest": "/client-admin/dist/index.html"
     }
   ]
 }

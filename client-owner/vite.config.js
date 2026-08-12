@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/owner/', // Matches the Express subdirectory mounting in production
+  base: './', // Relative base path for universal hosting (root domain or subpath)
   build: {
     chunkSizeWarningLimit: 1600,
   },
