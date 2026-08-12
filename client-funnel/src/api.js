@@ -1,5 +1,5 @@
 // Base API fetch wrapper with session credential handling
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 async function request(endpoint, options = {}) {
   const url = `${API_BASE}${endpoint}`;
@@ -53,5 +53,6 @@ export const api = {
   getFeedbacks: () => request('/feedbacks', { method: 'GET' }),
   getConversions: () => request('/feedbacks/conversions', { method: 'GET' }),
   submitFeedback: (feedbackData) => request('/feedbacks/submit', { method: 'POST', body: feedbackData }),
-  submitConversion: (conversionData) => request('/feedbacks/convert', { method: 'POST', body: conversionData })
+  submitConversion: (conversionData) => request('/feedbacks/convert', { method: 'POST', body: conversionData }),
+  updateFeedbackStatus: (id, status) => request(`/feedbacks/${id}/status`, { method: 'PUT', body: { status } })
 };
