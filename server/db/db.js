@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import dns from 'dns';
+import { MONGO_URI } from '../config/env.js';
 
 // Fix DNS resolution for MongoDB Atlas SRV lookups in Windows environment only
 if (process.platform === 'win32') {
@@ -8,12 +9,6 @@ if (process.platform === 'win32') {
   } catch (err) {
     // fallback if DNS custom servers cannot be set
   }
-}
-
-const DEFAULT_MONGO_URI = 'mongodb+srv://ranjankumarmandal9955_db_user:pPEIDlHvAIISHMJq@cluster0.pnjvds9.mongodb.net/review_flow?retryWrites=true&w=majority';
-let MONGO_URI = process.env.MONGO_URI;
-if (!MONGO_URI || MONGO_URI.includes('<cluster>') || MONGO_URI.includes('<username>')) {
-  MONGO_URI = DEFAULT_MONGO_URI;
 }
 
 // Mongoose Schemas & Models
