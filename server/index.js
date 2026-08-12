@@ -68,17 +68,17 @@ app.use('/owner', express.static(ownerBuildPath));
 app.use(express.static(funnelBuildPath));
 
 // SPA Fallback for Admin Dashboard routing
-app.get([/^\/admin\/.*/], (req, res) => {
+app.get('/admin/*', (req, res) => {
   res.sendFile(path.join(adminBuildPath, 'index.html'));
 });
 
 // SPA Fallback for Shop Owner Dashboard routing
-app.get([/^\/owner\/.*/], (req, res) => {
+app.get('/owner/*', (req, res) => {
   res.sendFile(path.join(ownerBuildPath, 'index.html'));
 });
 
 // SPA Fallback for Customer Funnel routing
-app.get(/.*/, (req, res) => {
+app.get('*', (req, res) => {
   res.sendFile(path.join(funnelBuildPath, 'index.html'));
 });
 
