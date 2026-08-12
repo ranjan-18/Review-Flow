@@ -67,8 +67,13 @@ let isConnected = false;
 
 export async function connectDB() {
   if (isConnected && mongoose.connection.readyState === 1) return;
+  const uri = MONGO_URI || process.env.MONGO_URI;
+  if (!uri) {
+    console.error('MongoDB Atlas Connection Error: MONGO_URI is missing from environment variables (.env)');
+    return;
+  }
   try {
-    const conn = await mongoose.connect(MONGO_URI, {
+    const conn = await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 5000
     });
     isConnected = true;
