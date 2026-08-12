@@ -49,10 +49,16 @@ app.use('/api/auth', authRoutes);
 app.use('/api/businesses', businessRoutes);
 app.use('/api/feedbacks', feedbackRoutes);
 
+import fs from 'fs';
+
 // Static client hosting in Production (using process.cwd() for cross-platform container support)
 const funnelBuildPath = path.resolve(process.cwd(), 'client-funnel/dist');
 const adminBuildPath = path.resolve(process.cwd(), 'client-admin/dist');
 const ownerBuildPath = path.resolve(process.cwd(), 'client-owner/dist');
+
+console.log(`[Static Mount] Admin Dist Exists: ${fs.existsSync(adminBuildPath)} (${adminBuildPath})`);
+console.log(`[Static Mount] Owner Dist Exists: ${fs.existsSync(ownerBuildPath)} (${ownerBuildPath})`);
+console.log(`[Static Mount] Funnel Dist Exists: ${fs.existsSync(funnelBuildPath)} (${funnelBuildPath})`);
 
 // Trailing slash redirects for sub-apps to guarantee relative asset loading
 app.get('/admin', (req, res) => res.redirect(301, '/admin/'));
