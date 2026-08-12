@@ -49,10 +49,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/businesses', businessRoutes);
 app.use('/api/feedbacks', feedbackRoutes);
 
-// Static client hosting in Production
-const funnelBuildPath = path.resolve(__dirname, '../client-funnel/dist');
-const adminBuildPath = path.resolve(__dirname, '../client-admin/dist');
-const ownerBuildPath = path.resolve(__dirname, '../client-owner/dist');
+// Static client hosting in Production (using process.cwd() for cross-platform container support)
+const funnelBuildPath = path.resolve(process.cwd(), 'client-funnel/dist');
+const adminBuildPath = path.resolve(process.cwd(), 'client-admin/dist');
+const ownerBuildPath = path.resolve(process.cwd(), 'client-owner/dist');
 
 // Trailing slash redirects for sub-apps to guarantee relative asset loading
 app.get('/admin', (req, res) => res.redirect(301, '/admin/'));

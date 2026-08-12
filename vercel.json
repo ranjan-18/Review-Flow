@@ -1,18 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "client-funnel/dist/**",
-          "client-admin/dist/**",
-          "client-owner/dist/**"
-        ]
-      }
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "client-*/**"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/(.*)",
