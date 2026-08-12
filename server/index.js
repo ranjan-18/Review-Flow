@@ -20,18 +20,16 @@ const app = express();
 // Initialize MongoDB Atlas connection
 connectDB();
 
-// Middlewares
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'];
+// Dynamic CORS configuration (supports local dev and cloud deployments like Render)
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+    // Allow requests with no origin (like mobile apps, curl, or same-origin static files)
+    if (!origin) return callback(null, true);
+    callback(null, true); // Allow all valid web origins
   },
   credentials: true // Crucial for session cookies!
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -50,7 +48,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Mount routes
+// Mount API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/businesses', businessRoutes);
 app.use('/api/feedbacks', feedbackRoutes);
@@ -60,22 +58,26 @@ const funnelBuildPath = path.resolve(__dirname, '../client-funnel/dist');
 const adminBuildPath = path.resolve(__dirname, '../client-admin/dist');
 const ownerBuildPath = path.resolve(__dirname, '../client-owner/dist');
 
-// Serve Admin Dashboard at '/admin'
+// Trailing slash redirects for sub-apps to guarantee relative asset loading
+app.get('/admin', (req, res) => res.redirect(301, '/admin/'));
+app.get('/owner', (req, res) => res.redirect(301, '/owner/'));
+
+// Serve Admin Dashboard at '/admin/'
 app.use('/admin', express.static(adminBuildPath));
 
-// Serve Shop Owner Dashboard at '/owner'
+// Serve Shop Owner Dashboard at '/owner/'
 app.use('/owner', express.static(ownerBuildPath));
 
 // Serve Customer Funnel at '/'
 app.use(express.static(funnelBuildPath));
 
 // SPA Fallback for Admin Dashboard routing
-app.get([/^\/admin$/, /^\/admin\/.*/], (req, res) => {
+app.get([/^\/admin\/.*/], (req, res) => {
   res.sendFile(path.join(adminBuildPath, 'index.html'));
 });
 
 // SPA Fallback for Shop Owner Dashboard routing
-app.get([/^\/owner$/, /^\/owner\/.*/], (req, res) => {
+app.get([/^\/owner\/.*/], (req, res) => {
   res.sendFile(path.join(ownerBuildPath, 'index.html'));
 });
 
