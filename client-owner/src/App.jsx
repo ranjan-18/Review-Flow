@@ -7,6 +7,7 @@ import "./App.css";
 export default function App() {
   const [businesses, setBusinesses] = useState([]);
   const [activeBizId, setActiveBizId] = useState("");
+  const [appMode, setAppMode] = useState("admin");
   const [isAuthenticated, setIsAuthenticated] = useState(null); // null = checking
   const [loading, setLoading] = useState(true);
 
@@ -40,22 +41,29 @@ export default function App() {
   }, [isAuthenticated]);
 
   const verifyAuth = async () => {
+    const savedToken = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+    if (!savedToken) {
+      setIsAuthenticated(false);
+      setLoading(false);
+      return;
+    }
+
     try {
       const me = await api.getMe();
-      if (me.success) {
+      if (me?.success) {
         setIsAuthenticated(true);
-        // Fetch owner specific resources (restricted on backend automatically)
+        // Fetch dashboard resources
         const bizList = await api.getBusinesses();
-        setBusinesses(bizList);
+        setBusinesses(bizList || []);
         
         const feedbacks = await api.getFeedbacks();
-        setPrivateFeedbacks(feedbacks);
+        setPrivateFeedbacks(feedbacks || []);
 
         const conversions = await api.getConversions();
-        setConvertedReviews(conversions);
+        setConvertedReviews(conversions || []);
 
-        if (bizList.length > 0) {
-          setActiveBizId(bizList[0].id);
+        if (bizList && bizList.length > 0) {
+          setActiveBizId(prev => prev || bizList[0].id);
         }
       } else {
         setIsAuthenticated(false);
@@ -102,6 +110,20 @@ export default function App() {
     setConvertedReviews([]);
   };
 
+  const handleSelectActiveBiz = (id) => {
+    setActiveBizId(id);
+  };
+
+  const handleAddBusiness = async (newBizData) => {
+    try {
+      const newBiz = await api.createBusiness(newBizData);
+      setBusinesses(prev => [...prev, newBiz]);
+      setActiveBizId(newBiz.id);
+    } catch (err) {
+      alert("Failed to create location: " + err.message);
+    }
+  };
+
   const handleUpdateBusiness = async (id, updatedData) => {
     try {
       const updated = await api.updateBusiness(id, updatedData);
@@ -110,6 +132,41 @@ export default function App() {
       alert("Failed to update location details: " + err.message);
     }
   };
+
+  const handleDeleteBusiness = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this branch location? All QR and analytics data will be lost.")) {
+      return;
+    }
+    try {
+      await api.deleteBusiness(id);
+      const updatedList = businesses.filter(b => b.id !== id);
+      setBusinesses(updatedList);
+      if (activeBizId === id && updatedList.length > 0) {
+        setActiveBizId(updatedList[0].id);
+      }
+    } catch (err) {
+      alert("Failed to delete branch location: " + err.message);
+    }
+  };
+
+  // Launch customer funnel in a new tab pointing to Port 5173
+  const handleLaunchFunnel = (id) => {
+    const funnelUrlBase = window.location.port === "5174" 
+      ? `${window.location.protocol}//${window.location.hostname}:5173` 
+      : window.location.origin;
+    const funnelUrl = `${funnelUrlBase}?biz=${id}&sim=true`;
+    window.open(funnelUrl, "_blank", "noopener,noreferrer");
+  };
+
+  if (loading) {
+    return (
+      <div style={{ display: "flex", width: "100vw", height: "100vh", alignItems: "center", justifyContent: "center", backgroundColor: "#0f172a", color: "white" }}>
+        <h3>Loading Admin Portal...</h3>
+      </div>
+    );
+  }
+
+  const activeBiz = businesses.find(b => b.id === activeBizId);
 
   const handleUpdateFeedbackStatus = async (id, status) => {
     try {
@@ -120,39 +177,21 @@ export default function App() {
     }
   };
 
-  // Launch customer funnel in a new tab pointing to Port 5173
-  const handleLaunchFunnel = (id) => {
-    const funnelUrlBase = window.location.port === "5175" 
-      ? `${window.location.protocol}//${window.location.hostname}:5173` 
-      : window.location.origin;
-    const funnelUrl = `${funnelUrlBase}?biz=${id}&sim=true`;
-    window.open(funnelUrl, "_blank", "noopener,noreferrer");
-  };
-
-  if (loading) {
-    return (
-      <div style={{ display: "flex", width: "100vw", height: "100vh", alignItems: "center", justifyContent: "center", backgroundColor: "#0f172a", color: "white" }}>
-        <h3>Loading Shop Owner Portal...</h3>
-      </div>
-    );
-  }
-
-  const activeBiz = businesses.find(b => b.id === activeBizId);
-
   return (
     <div>
       {isAuthenticated ? (
         <Dashboard
           businesses={businesses}
           activeBiz={activeBiz}
-          setActiveBizId={setActiveBizId}
+          setActiveBizId={handleSelectActiveBiz}
+          onAddBusiness={handleAddBusiness}
           onUpdateBusiness={handleUpdateBusiness}
+          onDeleteBusiness={handleDeleteBusiness}
           onLaunchFunnel={handleLaunchFunnel}
           onLogout={handleLogout}
           privateFeedbacks={privateFeedbacks}
           convertedReviews={convertedReviews}
           onUpdateFeedbackStatus={handleUpdateFeedbackStatus}
-          isOwnerView={true} // Marks this dashboard render as a shop owner dashboard
         />
       ) : (
         <Login onLoginSuccess={handleLoginSuccess} />

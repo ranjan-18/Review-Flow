@@ -20,11 +20,14 @@ const app = express();
 // Initialize MongoDB Atlas connection
 connectDB();
 
-// Enable CORS for all requesting origins with session credential support
+// Enable CORS for all requesting origins with session credential and Authorization header support
 app.use(cors({
   origin: true,
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
+app.options('*', cors());
 
 app.use(express.json());
 app.use(cookieParser());

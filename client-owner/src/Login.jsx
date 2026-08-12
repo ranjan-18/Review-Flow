@@ -22,7 +22,10 @@ export default function Login({ onLoginSuccess }) {
 
     try {
       const response = await api.login(username, password);
-      if (response.success) {
+      if (response && response.success) {
+        if (response.token) {
+          localStorage.setItem('auth_token', response.token);
+        }
         onLoginSuccess(response.user);
       }
     } catch (err) {

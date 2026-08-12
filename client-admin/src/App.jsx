@@ -41,21 +41,28 @@ export default function App() {
   }, [isAuthenticated]);
 
   const verifyAuth = async () => {
+    const savedToken = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+    if (!savedToken) {
+      setIsAuthenticated(false);
+      setLoading(false);
+      return;
+    }
+
     try {
       const me = await api.getMe();
-      if (me.success) {
+      if (me?.success) {
         setIsAuthenticated(true);
         // Fetch dashboard resources
         const bizList = await api.getBusinesses();
-        setBusinesses(bizList);
+        setBusinesses(bizList || []);
         
         const feedbacks = await api.getFeedbacks();
-        setPrivateFeedbacks(feedbacks);
+        setPrivateFeedbacks(feedbacks || []);
 
         const conversions = await api.getConversions();
-        setConvertedReviews(conversions);
+        setConvertedReviews(conversions || []);
 
-        if (bizList.length > 0) {
+        if (bizList && bizList.length > 0) {
           setActiveBizId(prev => prev || bizList[0].id);
         }
       } else {
