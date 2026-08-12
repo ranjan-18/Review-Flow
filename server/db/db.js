@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 import dns from 'dns';
 
-// Fix DNS resolution for MongoDB Atlas SRV lookups in Windows environment
-try {
-  dns.setServers(['8.8.8.8', '1.1.1.1']);
-} catch (err) {
-  // fallback if DNS custom servers cannot be set
+// Fix DNS resolution for MongoDB Atlas SRV lookups in Windows environment only
+if (process.platform === 'win32') {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch (err) {
+    // fallback if DNS custom servers cannot be set
+  }
 }
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://ranjankumarmandal9955_db_user:pPEIDlHvAIISHMJq@cluster0.pnjvds9.mongodb.net/review_flow?retryWrites=true&w=majority';
