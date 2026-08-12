@@ -34,39 +34,39 @@
     },
     {
       "src": "/admin/assets/(.*)",
-      "dest": "/client-admin/assets/$1"
+      "dest": "/client-admin/dist/assets/$1"
     },
     {
       "src": "/admin/(.*)",
-      "dest": "/client-admin/index.html"
+      "dest": "/client-admin/dist/index.html"
     },
     {
       "src": "/admin",
-      "dest": "/client-admin/index.html"
+      "dest": "/client-admin/dist/index.html"
     },
     {
       "src": "/owner/assets/(.*)",
-      "dest": "/client-owner/assets/$1"
+      "dest": "/client-owner/dist/assets/$1"
     },
     {
       "src": "/owner/(.*)",
-      "dest": "/client-owner/index.html"
+      "dest": "/client-owner/dist/index.html"
     },
     {
       "src": "/owner",
-      "dest": "/client-owner/index.html"
+      "dest": "/client-owner/dist/index.html"
     },
     {
       "src": "/assets/(.*)",
-      "dest": "/client-funnel/assets/$1"
+      "dest": "/client-funnel/dist/assets/$1"
     },
     {
       "src": "/favicon.svg",
-      "dest": "/client-funnel/favicon.svg"
+      "dest": "/client-funnel/dist/favicon.svg"
     },
     {
       "src": "/(.*)",
-      "dest": "/client-funnel/index.html"
+      "dest": "/client-funnel/dist/index.html"
     }
   ]
 }
