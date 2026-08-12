@@ -22,7 +22,7 @@ export const login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     });
 
-    return res.json({ success: true, message: 'Logged in successfully', user: { username, role: 'admin' } });
+    return res.json({ success: true, token, message: 'Logged in successfully', user: { username, role: 'admin' } });
   }
 
   // Validate business owner credentials from database
@@ -47,6 +47,7 @@ export const login = async (req, res) => {
 
       return res.json({
         success: true,
+        token,
         message: 'Logged in successfully as Shop Owner',
         user: { username, role: 'owner', businessId: matchedBiz.id }
       });

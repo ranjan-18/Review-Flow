@@ -10,12 +10,16 @@ async function request(endpoint, options = {}) {
   // Set credentials parameter to include to pass session cookies
   options.credentials = 'include';
   
+  // Automatically attach Bearer token header for cross-origin Vercel <-> Render requests
+  const savedToken = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+  options.headers = {
+    ...options.headers,
+    ...(savedToken ? { 'Authorization': `Bearer ${savedToken}` } : {})
+  };
+
   if (options.body && typeof options.body === 'object') {
     options.body = JSON.stringify(options.body);
-    options.headers = {
-      ...options.headers,
-      'Content-Type': 'application/json'
-    };
+    options.headers['Content-Type'] = 'application/json';
   }
 
   const response = await fetch(url, options);
@@ -40,8 +44,17 @@ async function request(endpoint, options = {}) {
 
 export const api = {
   // Auth API
-  login: (username, password) => request('/auth/login', { method: 'POST', body: { username, password } }),
-  logout: () => request('/auth/logout', { method: 'POST' }),
+  login: async (username, password) => {
+    const res = await request('/auth/login', { method: 'POST', body: { username, password } });
+    if (res?.token) {
+      localStorage.setItem('auth_token', res.token);
+    }
+    return res;
+  },
+  logout: async () => {
+    localStorage.removeItem('auth_token');
+    return await request('/auth/logout', { method: 'POST' });
+  },
   forgotPassword: (username) => request('/auth/forgot-password', { method: 'POST', body: { username } }),
   getMe: () => request('/auth/me', { method: 'GET' }),
 
