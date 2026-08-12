@@ -42,6 +42,7 @@ export const api = {
   // Auth API
   login: (username, password) => request('/auth/login', { method: 'POST', body: { username, password } }),
   logout: () => request('/auth/logout', { method: 'POST' }),
+  forgotPassword: (username) => request('/auth/forgot-password', { method: 'POST', body: { username } }),
   getMe: () => request('/auth/me', { method: 'GET' }),
 
   // Businesses API

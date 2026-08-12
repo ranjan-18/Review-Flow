@@ -43,6 +43,8 @@ export default function Dashboard({
   const [bizOwnerUser, setBizOwnerUser] = useState("");
   const [bizOwnerPass, setBizOwnerPass] = useState("");
   const [editBizId, setEditBizId] = useState(null);
+  const [showCreatedCredsModal, setShowCreatedCredsModal] = useState(null);
+  const [copiedCreds, setCopiedCreds] = useState(false);
 
   // QR Design States
   const [qrColorDark, setQrColorDark] = useState("#0f172a");
@@ -158,15 +160,29 @@ export default function Dashboard({
   const handleAddSubmit = (e) => {
     e.preventDefault();
     if (!bizName || !bizGoogleUrl) return;
+
+    const ownerUser = bizOwnerUser.trim() || `${bizName.toLowerCase().replace(/[^a-z0-9]/g, '')}_owner`;
+    const ownerPass = bizOwnerPass.trim() || `pass_${Math.floor(1000 + Math.random() * 9000)}`;
+
     onAddBusiness({
       name: bizName,
       type: bizType,
       googleReviewUrl: bizGoogleUrl,
       whatsappNumber: bizWhatsapp,
       primaryColor: bizColor,
-      ownerUsername: bizOwnerUser,
-      ownerPassword: bizOwnerPass
+      ownerUsername: ownerUser,
+      ownerPassword: ownerPass
     });
+
+    setShowCreatedCredsModal({
+      name: bizName,
+      username: ownerUser,
+      password: ownerPass,
+      portalUrl: window.location.hostname.includes('vercel.app') 
+        ? 'https://review-flow-taupe.vercel.app/'
+        : `${window.location.origin}/owner/`
+    });
+
     // Reset form
     setBizName("");
     setBizType("restaurant");
@@ -1337,6 +1353,32 @@ export default function Dashboard({
               </div>
             </div>
 
+            <div style={{ padding: "1rem", background: "rgba(99, 102, 241, 0.08)", border: "1px solid rgba(99, 102, 241, 0.2)", borderRadius: "12px", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                🔐 Shop Owner Portal Login Credentials
+              </div>
+              <div className="form-field" style={{ marginBottom: 0 }}>
+                <label className="form-label" style={{ fontSize: "0.75rem" }}>Owner Username (Optional - Auto generated if left blank)</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. bellapasta_owner"
+                  value={bizOwnerUser}
+                  onChange={(e) => setBizOwnerUser(e.target.value)}
+                  className="form-input"
+                />
+              </div>
+              <div className="form-field" style={{ marginBottom: 0 }}>
+                <label className="form-label" style={{ fontSize: "0.75rem" }}>Owner Password (Optional - Auto generated if left blank)</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. pass_9821"
+                  value={bizOwnerPass}
+                  onChange={(e) => setBizOwnerPass(e.target.value)}
+                  className="form-input"
+                />
+              </div>
+            </div>
+
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>Cancel</button>
               <button type="submit" className="btn btn-primary">Create Business</button>
@@ -1427,6 +1469,72 @@ export default function Dashboard({
               <button type="submit" className="btn btn-primary">Save Changes</button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* RENDER MODAL: CREATED SHOP OWNER CREDENTIALS */}
+      {showCreatedCredsModal && (
+        <div className="modal-overlay" style={{ zIndex: 9999 }}>
+          <div className="modal-content glassmorphism animate-scale-up" style={{ maxWidth: "480px", padding: "2rem" }}>
+            <div style={{ textAlign: "center", marginBottom: "1.25rem" }}>
+              <div style={{ width: "3.5rem", height: "3.5rem", borderRadius: "50%", background: "rgba(16, 185, 129, 0.15)", border: "1px solid rgba(16, 185, 129, 0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 0.75rem auto" }}>
+                <CheckCircle2 size={32} color="#10b981" />
+              </div>
+              <h3 style={{ fontSize: "1.25rem", fontWeight: 800, margin: 0 }}>Shop Location Created!</h3>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
+                Login credentials generated for <strong>{showCreatedCredsModal.name}</strong> owner.
+              </p>
+            </div>
+
+            <div style={{ background: "rgba(17, 24, 39, 0.6)", border: "1px solid var(--border-light)", borderRadius: "14px", padding: "1.25rem", display: "flex", flexDirection: "column", gap: "0.85rem", marginBottom: "1.5rem" }}>
+              <div>
+                <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Shop Owner Username</span>
+                <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "#34d399", fontFamily: "monospace" }}>{showCreatedCredsModal.username}</div>
+              </div>
+
+              <div>
+                <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Password</span>
+                <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "#f472b6", fontFamily: "monospace" }}>{showCreatedCredsModal.password}</div>
+              </div>
+
+              <div>
+                <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Portal Access Link</span>
+                <div style={{ fontSize: "0.8rem", color: "#818cf8", wordBreak: "break-all" }}>{showCreatedCredsModal.portalUrl}</div>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: "0.75rem" }}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                style={{ flex: 1 }}
+                onClick={() => setShowCreatedCredsModal(null)}
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                style={{ flex: 1.5 }}
+                onClick={() => {
+                  const text = `Shop Owner Credentials for ${showCreatedCredsModal.name}:\nUsername: ${showCreatedCredsModal.username}\nPassword: ${showCreatedCredsModal.password}\nPortal Link: ${showCreatedCredsModal.portalUrl}`;
+                  navigator.clipboard.writeText(text);
+                  setCopiedCreds(true);
+                  setTimeout(() => setCopiedCreds(false), 2500);
+                }}
+              >
+                {copiedCreds ? (
+                  <>
+                    <Check size={16} /> Credentials Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy size={16} /> Copy Credentials
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

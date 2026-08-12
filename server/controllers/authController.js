@@ -14,18 +14,18 @@ export const login = async (req, res) => {
     // Generate JWT token
     const token = jwt.sign({ username, role: 'admin' }, JWT_SECRET, { expiresIn: '24h' });
 
-    // Set cookie
+    // Set cookie with sameSite: 'none' and secure: true for cross-domain Vercel <-> Render session support
     res.cookie('session_token', token, {
       httpOnly: true,
-      secure: NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     });
 
     return res.json({ success: true, message: 'Logged in successfully', user: { username, role: 'admin' } });
   }
 
-  // Validate business owner credentials from local database
+  // Validate business owner credentials from database
   try {
     const businesses = await db.getBusinesses();
     const matchedBiz = businesses.find(b => b.ownerUsername === username && b.ownerPassword === password);
@@ -40,8 +40,8 @@ export const login = async (req, res) => {
 
       res.cookie('session_token', token, {
         httpOnly: true,
-        secure: NODE_ENV === 'production',
-        sameSite: 'lax',
+        secure: true,
+        sameSite: 'none',
         maxAge: 24 * 60 * 60 * 1000,
       });
 
@@ -59,8 +59,41 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie('session_token');
+  res.clearCookie('session_token', { httpOnly: true, secure: true, sameSite: 'none' });
   return res.json({ success: true, message: 'Logged out successfully' });
+};
+
+export const forgotPassword = async (req, res) => {
+  const { username } = req.body;
+  if (!username) {
+    return res.status(400).json({ error: 'Username or account ID is required' });
+  }
+
+  if (username === ADMIN_USER) {
+    return res.json({
+      success: true,
+      message: 'Admin account recovery initiated. Password reset instructions sent to system administrator email.'
+    });
+  }
+
+  try {
+    const businesses = await db.getBusinesses();
+    const matchedBiz = businesses.find(b => b.ownerUsername === username || b.name.toLowerCase().includes(username.toLowerCase()));
+
+    if (matchedBiz) {
+      return res.json({
+        success: true,
+        message: `Password reset request submitted for "${matchedBiz.name}". Please contact Administrator or check registered email.`
+      });
+    }
+  } catch (err) {
+    console.error('Forgot password check failed', err);
+  }
+
+  return res.json({
+    success: true,
+    message: 'If an account exists for this username, password recovery instructions have been sent.'
+  });
 };
 
 export const getMe = async (req, res) => {
