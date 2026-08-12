@@ -1,0 +1,42 @@
+{
+  "name": "review-automation",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev:server": "nodemon server/index.js",
+    "dev:funnel": "npm run dev --prefix client-funnel",
+    "dev:admin": "npm run dev --prefix client-admin",
+    "dev:owner": "npm run dev --prefix client-owner",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:funnel\" \"npm run dev:admin\" \"npm run dev:owner\"",
+    "build:funnel": "npm run build --prefix client-funnel",
+    "build:admin": "npm run build --prefix client-admin",
+    "build:owner": "npm run build --prefix client-owner",
+    "build": "npm run build:funnel && npm run build:admin && npm run build:owner",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "canvas-confetti": "^1.9.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.6.2",
+    "html2canvas": "^1.4.1",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^1.31.0",
+    "mongoose": "^9.9.2",
+    "qrcode": "^1.5.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "concurrently": "^10.0.4",
+    "nodemon": "^3.1.14",
+    "oxlint": "^1.75.0",
+    "vite": "^8.2.0"
+  }
+}
