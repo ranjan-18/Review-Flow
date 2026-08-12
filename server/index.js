@@ -1,3 +1,4 @@
+import { PORT, NODE_ENV, MONGO_URI } from './config/env.js';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -5,7 +6,6 @@ import path from 'path';
 import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
 
-import { PORT, NODE_ENV } from './config/env.js';
 import authRoutes from './routes/auth.js';
 import businessRoutes from './routes/business.js';
 import feedbackRoutes from './routes/feedback.js';
