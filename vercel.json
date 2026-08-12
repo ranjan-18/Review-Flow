@@ -13,18 +13,18 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "https://review-flow-sovb.onrender.com/api/$1"
+      "source": "/api/:path*",
+      "destination": "https://review-flow-sovb.onrender.com/api/:path*"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "/client-admin/dist/assets/$1"
+      "source": "/assets/:path*",
+      "destination": "/client-admin/dist/assets/:path*"
     },
     {
-      "src": "/(.*)",
-      "dest": "/client-admin/dist/index.html"
+      "source": "/:path*",
+      "destination": "/client-admin/dist/index.html"
     }
   ]
 }

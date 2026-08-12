@@ -1,5 +1,8 @@
-// Base API fetch wrapper with session credential handling
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+const DEFAULT_API_HOST = typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')
+  ? 'https://review-flow-sovb.onrender.com/api'
+  : '/api';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_HOST;
 
 async function request(endpoint, options = {}) {
   const url = `${API_BASE}${endpoint}`;
