@@ -10,7 +10,11 @@ if (process.platform === 'win32') {
   }
 }
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://ranjankumarmandal9955_db_user:pPEIDlHvAIISHMJq@cluster0.pnjvds9.mongodb.net/review_flow?retryWrites=true&w=majority';
+const DEFAULT_MONGO_URI = 'mongodb+srv://ranjankumarmandal9955_db_user:pPEIDlHvAIISHMJq@cluster0.pnjvds9.mongodb.net/review_flow?retryWrites=true&w=majority';
+let MONGO_URI = process.env.MONGO_URI;
+if (!MONGO_URI || MONGO_URI.includes('<cluster>') || MONGO_URI.includes('<username>')) {
+  MONGO_URI = DEFAULT_MONGO_URI;
+}
 
 // Mongoose Schemas & Models
 const businessSchema = new mongoose.Schema({

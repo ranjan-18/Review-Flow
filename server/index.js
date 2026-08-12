@@ -20,14 +20,10 @@ const app = express();
 // Initialize MongoDB Atlas connection
 connectDB();
 
-// Dynamic CORS configuration (supports local dev and cloud deployments like Render)
+// Enable CORS for all requesting origins with session credential support
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, or same-origin static files)
-    if (!origin) return callback(null, true);
-    callback(null, true); // Allow all valid web origins
-  },
-  credentials: true // Crucial for session cookies!
+  origin: true,
+  credentials: true
 }));
 
 app.use(express.json());
