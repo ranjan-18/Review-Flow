@@ -2,41 +2,71 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.js",
-      "use": "@vercel/node",
+      "src": "client-funnel/package.json",
+      "use": "@vercel/static-build",
       "config": {
-        "includeFiles": [
-          "client-funnel/dist/**",
-          "client-admin/dist/**",
-          "client-owner/dist/**"
-        ]
+        "distDir": "dist"
       }
+    },
+    {
+      "src": "client-admin/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "client-owner/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
-    {
-      "src": "/admin",
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/admin/(.*)",
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/owner",
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/owner/(.*)",
-      "dest": "/api/index.js"
-    },
     {
       "src": "/api/(.*)",
       "dest": "/api/index.js"
     },
     {
+      "src": "/admin/assets/(.*)",
+      "dest": "/client-admin/assets/$1"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/client-admin/index.html"
+    },
+    {
+      "src": "/admin",
+      "dest": "/client-admin/index.html"
+    },
+    {
+      "src": "/owner/assets/(.*)",
+      "dest": "/client-owner/assets/$1"
+    },
+    {
+      "src": "/owner/(.*)",
+      "dest": "/client-owner/index.html"
+    },
+    {
+      "src": "/owner",
+      "dest": "/client-owner/index.html"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/client-funnel/assets/$1"
+    },
+    {
+      "src": "/favicon.svg",
+      "dest": "/client-funnel/favicon.svg"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/api/index.js"
+      "dest": "/client-funnel/index.html"
     }
   ]
 }
