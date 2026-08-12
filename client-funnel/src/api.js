@@ -49,10 +49,14 @@ export const api = {
     if (res?.token) {
       localStorage.setItem('auth_token', res.token);
     }
+    if (res?.user) {
+      localStorage.setItem('user', JSON.stringify(res.user));
+    }
     return res;
   },
   logout: async () => {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('user');
     return await request('/auth/logout', { method: 'POST' });
   },
   forgotPassword: (username) => request('/auth/forgot-password', { method: 'POST', body: { username } }),
