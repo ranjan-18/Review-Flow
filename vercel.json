@@ -2,10 +2,6 @@
   "outputDirectory": "public",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api"
-    },
-    {
       "source": "/admin/(.*)",
       "destination": "/admin/index.html"
     },
@@ -14,7 +10,7 @@
       "destination": "/owner/index.html"
     },
     {
-      "source": "/(.*)",
+      "source": "/(?!api/)(.*)",
       "destination": "/index.html"
     }
   ]
