@@ -160,7 +160,7 @@ export default function ReviewFunnel({ business, onLogAction, isSimulation, onEx
   };
 
   return (
-    <div className="funnel-page-wrapper" style={{ position: "relative", minHeight: "100vh", width: "100%" }}>
+    <div className="funnel-page-wrapper" style={{ position: "relative", minHeight: "100dvh", width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
       {/* Background blobs for premium depth styling */}
       <div className="blob-funnel-light">
         <div className="blob blob-1" style={{ filter: "blur(120px)", opacity: 0.25, backgroundColor: business.primaryColor }}></div>
@@ -179,7 +179,7 @@ export default function ReviewFunnel({ business, onLogAction, isSimulation, onEx
         )}
 
         {/* Main Review Card */}
-        <div className="funnel-card" style={{ marginTop: isSimulation ? "3rem" : "0" }}>
+        <div className="funnel-card" style={{ marginTop: isSimulation ? "4rem" : "auto", marginBottom: "auto" }}>
           
           {/* Step 1: EXPERIENCE RATING */}
           {step === 1 && (
