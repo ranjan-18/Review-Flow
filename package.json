@@ -13,7 +13,7 @@
     "build:funnel": "npm run build --prefix client-funnel",
     "build:admin": "npm run build --prefix client-admin",
     "build:owner": "npm run build --prefix client-owner",
-    "build": "npm run build:funnel && npm run build:admin && npm run build:owner",
+    "build": "npm run build:funnel && npm run build:admin && npm run build:owner && rm -rf public && mkdir -p public/admin public/owner public/assets && cp -r client-funnel/dist/* public/ && cp -r client-admin/dist/* public/admin/ && cp -r client-owner/dist/* public/owner/",
     "lint": "oxlint"
   },
   "dependencies": {

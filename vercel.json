@@ -1,76 +1,17 @@
-{
-  "version": 2,
-  "builds": [
-    {
-      "src": "client-admin/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "client-owner/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "client-funnel/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/[...slug].js",
-      "use": "@vercel/node"
-    }
-  ],
+﻿{
+  "outputDirectory": "public",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index"
+      "source": "/admin/(.*)",
+      "destination": "/admin/index.html"
     },
     {
-      "source": "/api",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/admin/assets/:path*",
-      "destination": "/client-admin/dist/assets/:path*"
-    },
-    {
-      "source": "/admin/:path*",
-      "destination": "/client-admin/dist/index.html"
-    },
-    {
-      "source": "/admin",
-      "destination": "/client-admin/dist/index.html"
-    },
-    {
-      "source": "/owner/assets/:path*",
-      "destination": "/client-owner/dist/assets/:path*"
-    },
-    {
-      "source": "/owner/:path*",
-      "destination": "/client-owner/dist/index.html"
-    },
-    {
-      "source": "/owner",
-      "destination": "/client-owner/dist/index.html"
-    },
-    {
-      "source": "/assets/:path*",
-      "destination": "/client-funnel/dist/assets/:path*"
+      "source": "/owner/(.*)",
+      "destination": "/owner/index.html"
     },
     {
       "source": "/(.*)",
-      "destination": "/client-funnel/dist/index.html"
+      "destination": "/index.html"
     }
   ]
 }
