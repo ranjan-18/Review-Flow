@@ -1629,6 +1629,8 @@
   gap: 1.25rem;
   position: relative;
   animation: scaleIn var(--transition-normal);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-header {

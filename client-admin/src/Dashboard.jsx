@@ -69,9 +69,13 @@ export default function Dashboard({
   // Generate QR Code on canvas
   useEffect(() => {
     if (activeBiz && canvasRef.current) {
-      const funnelUrlBase = window.location.port === "5174" 
-        ? `${window.location.protocol}//${window.location.hostname}:5173` 
-        : window.location.origin;
+      let funnelUrlBase = window.location.origin;
+      
+      // Auto-replace localhost with the local network IP and explicitly set the Funnel port to 5173 for local dev testing
+      if (window.location.hostname.includes('localhost') || window.location.hostname.includes('10.')) {
+        funnelUrlBase = `${window.location.protocol}//10.159.14.197:5173`;
+      }
+
       const funnelUrl = `${funnelUrlBase}/?biz=${activeBiz.id}`;
       
       QRCode.toCanvas(
@@ -1273,8 +1277,8 @@ export default function Dashboard({
 
       {/* RENDER MODAL: CREATE BUSINESS */}
       {showAddModal && (
-        <div className="modal-overlay">
-          <form className="modal-content" onSubmit={handleAddSubmit}>
+        <div className="modal-overlay" onClick={() => setShowAddModal(false)}>
+          <form className="modal-content" onClick={(e) => e.stopPropagation()} onSubmit={handleAddSubmit}>
             <div className="modal-header">
               <h3 className="modal-title">Register New Business</h3>
               <button 
@@ -1389,8 +1393,8 @@ export default function Dashboard({
 
       {/* RENDER MODAL: EDIT BUSINESS */}
       {showEditModal && (
-        <div className="modal-overlay">
-          <form className="modal-content" onSubmit={handleEditSubmit}>
+        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
+          <form className="modal-content" onClick={(e) => e.stopPropagation()} onSubmit={handleEditSubmit}>
             <div className="modal-header">
               <h3 className="modal-title">Edit Business Profile</h3>
               <button 
@@ -1474,8 +1478,16 @@ export default function Dashboard({
 
       {/* RENDER MODAL: CREATED SHOP OWNER CREDENTIALS */}
       {showCreatedCredsModal && (
-        <div className="modal-overlay" style={{ zIndex: 9999 }}>
-          <div className="modal-content glassmorphism animate-scale-up" style={{ maxWidth: "480px", padding: "2rem" }}>
+        <div className="modal-overlay" style={{ zIndex: 9999 }} onClick={() => setShowCreatedCredsModal(null)}>
+          <div className="modal-content glassmorphism animate-scale-up" style={{ maxWidth: "480px", padding: "2rem", position: "relative" }} onClick={(e) => e.stopPropagation()}>
+            <button 
+              type="button" 
+              className="modal-close-btn" 
+              onClick={() => setShowCreatedCredsModal(null)}
+              style={{ position: 'absolute', top: '15px', right: '15px' }}
+            >
+              &times;
+            </button>
             <div style={{ textAlign: "center", marginBottom: "1.25rem" }}>
               <div style={{ width: "3.5rem", height: "3.5rem", borderRadius: "50%", background: "rgba(16, 185, 129, 0.15)", border: "1px solid rgba(16, 185, 129, 0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 0.75rem auto" }}>
                 <CheckCircle2 size={32} color="#10b981" />

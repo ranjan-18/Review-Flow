@@ -142,8 +142,8 @@ export default function Login({ onLoginSuccess }) {
 
       {/* FORGOT PASSWORD MODAL */}
       {showForgotModal && (
-        <div className="modal-overlay" style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 9999 }}>
-          <div className="modal-content glassmorphism animate-scale-up" style={{ width: "90%", maxWidth: "420px", padding: "1.75rem", borderRadius: "20px", position: "relative", border: "1px solid rgba(255,255,255,0.1)" }}>
+        <div className="modal-overlay" onClick={() => setShowForgotModal(false)} style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 9999 }}>
+          <div className="modal-content glassmorphism animate-scale-up" onClick={(e) => e.stopPropagation()} style={{ width: "90%", maxWidth: "420px", padding: "1.75rem", borderRadius: "20px", position: "relative", border: "1px solid rgba(255,255,255,0.1)", maxHeight: "90vh", overflowY: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <HelpCircle size={20} color="var(--accent-primary)" />
