@@ -1,8 +1,4 @@
-const DEFAULT_API_HOST = typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')
-  ? 'https://review-flow-sovb.onrender.com/api'
-  : '/api';
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_HOST;
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 async function request(endpoint, options = {}) {
   const url = `${API_BASE}${endpoint}`;
