@@ -33,6 +33,14 @@
   ],
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/api",
+      "destination": "/api/index"
+    },
+    {
       "source": "/admin/assets/:path*",
       "destination": "/client-admin/dist/assets/:path*"
     },
@@ -61,7 +69,7 @@
       "destination": "/client-funnel/dist/assets/:path*"
     },
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "destination": "/client-funnel/dist/index.html"
     }
   ]
