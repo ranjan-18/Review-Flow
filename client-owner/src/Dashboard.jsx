@@ -67,13 +67,9 @@ export default function Dashboard({
   // Generate QR Code on canvas
   useEffect(() => {
     if (activeBiz && canvasRef.current) {
-      let funnelUrlBase = window.location.origin;
+      // Always use the public Vercel link for the QR Code so customers can scan it from ANY device anywhere.
+      let funnelUrlBase = "https://review-flow-ioy9.vercel.app";
       
-      // Auto-replace localhost with the local network IP and explicitly set the Funnel port to 5173 for local dev testing
-      if (window.location.hostname.includes('localhost') || window.location.hostname.includes('10.')) {
-        funnelUrlBase = `${window.location.protocol}//10.159.14.197:5173`;
-      }
-
       const funnelUrl = `${funnelUrlBase}/?biz=${activeBiz.id}`;
       
       QRCode.toCanvas(
